@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const protectRoute = require("../middleware/protectRoute");
 const decksController = require("../controllers/decks.controller");
+const cardsController = require("../controllers/cards.controller");
 
 // MIDDLEWARE
 router.post("/*", protectRoute, (req, res, next) => {
@@ -28,6 +29,15 @@ router.get("/:deckId", async (req, res, next) => {
 router.post("/", async (req, res, next) => {
   const newDeck = await decksController.createOne(req.body, next);
   if (newDeck) res.status(201).send(newDeck);
+});
+
+router.post("/:deckId", async (req, res, next) => {
+  const newCard = await decksController.createOneCard(
+    req.params.deckId,
+    req.body,
+    next
+  );
+  if (newCard) res.status(201).send(newCard);
 });
 
 router.put("/:deckId", async (req, res, next) => {
