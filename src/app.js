@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const cookieParser = require("cookie-parser");
+const protectRoute = require("./middleware/protectRoute");
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
@@ -18,10 +19,13 @@ const requireJsonContent = (req, res, next) => {
   }
 };
 
-app.post("/*", requireJsonContent, (req, res, next) => {
+app.post("/*", [protectRoute, requireJsonContent], (req, res, next) => {
   next();
 });
-app.put("/*", requireJsonContent, (req, res, next) => {
+app.put("/*", [protectRoute, requireJsonContent], (req, res, next) => {
+  next();
+});
+app.delete("/*", protectRoute, (req, res, next) => {
   next();
 });
 

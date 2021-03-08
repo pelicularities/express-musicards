@@ -2,14 +2,17 @@ const request = require("supertest");
 const app = require("../src/app");
 const Deck = require("../src/models/deck.model");
 const dbHandlers = require("../test/dbHandler");
+const createJWTToken = require("../src/utils/jwt");
 
 describe("/decks", () => {
+  let token;
   const testDecks = [
     { title: "Test Deck 1", description: "Description 1", cards: [] },
     { title: "Test Deck 2", description: "Description 2", cards: [] },
   ];
   beforeAll(async () => {
     await dbHandlers.connect();
+    token = createJWTToken("yoloauth");
   });
   afterAll(async () => {
     await dbHandlers.clearDatabase();
@@ -35,6 +38,7 @@ describe("/decks", () => {
       const response = await request(app)
         .post("/decks")
         .send(newDeck)
+        .set("Cookie", `token=${token}`)
         .expect(201);
       console.log(response.body);
       expect(response.body).toMatchObject(newDeck);
@@ -46,6 +50,7 @@ describe("/decks", () => {
       const response = await request(app)
         .post("/decks")
         .send(newDeck)
+        .set("Cookie", `token=${token}`)
         .expect(201);
       expect(response.body).toMatchObject(newDeck);
     });
@@ -55,11 +60,24 @@ describe("/decks", () => {
       };
       const response = await request(app)
         .post("/decks")
+        .set("Cookie", `token=${token}`)
         .send(newDeck)
         .expect(422);
     });
     it("should return 400 if no JSON is given", async () => {
-      const response = await request(app).post("/decks").expect(400);
+      await request(app)
+        .post("/decks")
+        .send("")
+        .set("Cookie", `token=${token}`)
+        .expect(400);
+    });
+    it("should return 401 if user is unauthorized", async () => {
+      console.log("unauthorized path");
+      const newDeck = {
+        title: "Test Deck 3",
+        description: "Description 3",
+      };
+      await request(app).post("/decks").send(newDeck).expect(401);
     });
   });
   describe("GET /decks, after POST requests", () => {
