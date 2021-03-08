@@ -2,24 +2,13 @@ require("dotenv").config();
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const protectRoute = require("./middleware/protectRoute");
+const requireJsonContent = require("./middleware/requireJsonContent");
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
 // MIDDLEWARE
-const requireJsonContent = (req, res, next) => {
-  if (req.headers["content-type"] !== "application/json") {
-    const error = new Error(
-      "Server requires content-type JSON for POST and PUT requests"
-    );
-    error.statusCode = 400;
-    next(error);
-  } else {
-    next();
-  }
-};
-
-app.post("/*", [protectRoute, requireJsonContent], (req, res, next) => {
+app.post("/*", requireJsonContent, (req, res, next) => {
   next();
 });
 app.put("/*", [protectRoute, requireJsonContent], (req, res, next) => {
@@ -36,8 +25,10 @@ app.get("/", (req, res) => {
 
 // ROUTERS
 const decksRouter = require("./routes/decks.routes");
+const usersRouter = require("./routes/users.routes");
 
 app.use("/decks", decksRouter);
+app.use("/users", usersRouter);
 
 // ERROR HANDLERS
 app.use((error, req, res, next) => {

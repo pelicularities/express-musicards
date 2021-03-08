@@ -1,7 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const Deck = require("../models/deck.model");
+const protectRoute = require("../middleware/protectRoute");
 const decksController = require("../controllers/decks.controller");
+
+// MIDDLEWARE
+router.post("/*", protectRoute, (req, res, next) => {
+  next();
+});
 
 // ROUTES
 router.get("/", async (req, res, next) => {
