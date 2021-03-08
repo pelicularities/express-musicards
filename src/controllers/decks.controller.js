@@ -29,4 +29,21 @@ const createOne = async (body, next) => {
   }
 };
 
-module.exports = { findAll, createOne, findById };
+const findByIdAndUpdate = async (id, body, next) => {
+  try {
+    const updatedDeck = await Deck.findByIdAndUpdate(id, body, {
+      new: true,
+      runValidators: true,
+    });
+    console.log(updatedDeck);
+    if (updatedDeck) return updatedDeck;
+    const error = new Error("Deck not found");
+    error.statusCode = 404;
+    next(error);
+  } catch (error) {
+    error.statusCode = 422;
+    next(error);
+  }
+};
+
+module.exports = { findAll, createOne, findById, findByIdAndUpdate };

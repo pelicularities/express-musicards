@@ -6,6 +6,7 @@ const createJWTToken = require("../src/utils/jwt");
 
 describe("/decks", () => {
   let token;
+  let deckId;
   const testDecks = [
     { title: "Test Deck 1", description: "Description 1", cards: [] },
     { title: "Test Deck 2", description: "Description 2", cards: [] },
@@ -40,7 +41,6 @@ describe("/decks", () => {
         .send(newDeck)
         .set("Cookie", `token=${token}`)
         .expect(201);
-      console.log(response.body);
       expect(response.body).toMatchObject(newDeck);
     });
     it("should successfully create a deck when given a title only", async () => {
@@ -72,7 +72,6 @@ describe("/decks", () => {
         .expect(400);
     });
     it("should return 401 if user is unauthorized", async () => {
-      console.log("unauthorized path");
       const newDeck = {
         title: "Test Deck 3",
         description: "Description 3",
@@ -81,12 +80,10 @@ describe("/decks", () => {
     });
   });
   describe("GET /decks, after POST requests", () => {
-    let deckId;
     it("should respond to GET with an array of decks from the DB, including newly added decks", async () => {
       const { body } = await request(app).get("/decks").expect(200);
       expect(body.length).toEqual(4);
       deckId = body[0]._id;
-      console.log(deckId);
     });
     it("should retrieve a single deck when given the deck ID", async () => {
       const { body } = await request(app).get(`/decks/${deckId}`).expect(200);
@@ -94,6 +91,79 @@ describe("/decks", () => {
     });
     it("should return 404 for a deck that doesn't exist", async () => {
       await request(app).get(`/decks/000000000001`).expect(404);
+    });
+  });
+  describe("PUT /decks", () => {
+    it("should successfully edit a deck when given a title only", async () => {
+      const editDeck = {
+        title: "Edited Deck 1",
+      };
+      const { body: updatedDeck } = await request(app)
+        .put(`/decks/${deckId}`)
+        .send(editDeck)
+        .set("Cookie", `token=${token}`)
+        .expect(200);
+      expect(updatedDeck.title).toEqual(editDeck.title);
+      expect(updatedDeck).toHaveProperty("description", "Description 1");
+    });
+    it("should successfully edit a deck when given a description only", async () => {
+      const editDeck = {
+        description: "Edited Deck Description 1",
+      };
+      const { body: updatedDeck } = await request(app)
+        .put(`/decks/${deckId}`)
+        .send(editDeck)
+        .set("Cookie", `token=${token}`)
+        .expect(200);
+      expect(updatedDeck.description).toEqual(editDeck.description);
+      expect(updatedDeck).toHaveProperty("title", "Edited Deck 1");
+    });
+    it("should successfully edit a deck when given both a title and description", async () => {
+      const editDeck = {
+        title: "Modified Deck 1",
+        description: "Modified Deck Description 1",
+      };
+      const { body: updatedDeck } = await request(app)
+        .put(`/decks/${deckId}`)
+        .send(editDeck)
+        .set("Cookie", `token=${token}`)
+        .expect(200);
+      expect(updatedDeck).toMatchObject(editDeck);
+    });
+    it("should return 422 if title is an empty string", async () => {
+      const editDeck = {
+        title: "",
+      };
+      const response = await request(app)
+        .put(`/decks/${deckId}`)
+        .set("Cookie", `token=${token}`)
+        .send(editDeck)
+        .expect(422);
+    });
+    it("should return 400 if no JSON is given", async () => {
+      await request(app)
+        .put(`/decks/${deckId}`)
+        .send("")
+        .set("Cookie", `token=${token}`)
+        .expect(400);
+    });
+    it("should return 401 if user is unauthorized", async () => {
+      const editDeck = {
+        title: "Unauthorized Test Deck",
+        description: "This deck is unauthorized!",
+      };
+      await request(app).put(`/decks/${deckId}`).send(editDeck).expect(401);
+    });
+    it("should return 404 for a deck that doesn't exist", async () => {
+      const editDeck = {
+        title: "Nonexistent Test Deck",
+        description: "This deck doesn't exist!",
+      };
+      await request(app)
+        .put(`/decks/000000000001`)
+        .send(editDeck)
+        .set("Cookie", `token=${token}`)
+        .expect(404);
     });
   });
 });

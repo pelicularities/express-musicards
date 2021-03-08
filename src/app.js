@@ -11,10 +11,7 @@ app.use(cookieParser());
 app.post("/*", requireJsonContent, (req, res, next) => {
   next();
 });
-app.put("/*", [protectRoute, requireJsonContent], (req, res, next) => {
-  next();
-});
-app.delete("/*", protectRoute, (req, res, next) => {
+app.put("/*", requireJsonContent, (req, res, next) => {
   next();
 });
 
