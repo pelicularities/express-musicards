@@ -7,6 +7,17 @@ const findAll = async (next) => {
     next(error);
   }
 };
+const findById = async (id, next) => {
+  try {
+    const deck = await Deck.findById(id);
+    if (deck) return deck;
+    const error = new Error("Deck not found!");
+    error.statusCode = 404;
+    next(error);
+  } catch (error) {
+    next(error);
+  }
+};
 
 const createOne = async (body, next) => {
   try {
@@ -18,4 +29,4 @@ const createOne = async (body, next) => {
   }
 };
 
-module.exports = { findAll, createOne };
+module.exports = { findAll, createOne, findById };

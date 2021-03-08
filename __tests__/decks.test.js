@@ -63,9 +63,19 @@ describe("/decks", () => {
     });
   });
   describe("GET /decks, after POST requests", () => {
+    let deckId;
     it("should respond to GET with an array of decks from the DB, including newly added decks", async () => {
       const { body } = await request(app).get("/decks").expect(200);
       expect(body.length).toEqual(4);
+      deckId = body[0]._id;
+      console.log(deckId);
+    });
+    it("should retrieve a single deck when given the deck ID", async () => {
+      const { body } = await request(app).get(`/decks/${deckId}`).expect(200);
+      expect(body).toMatchObject(testDecks[0]);
+    });
+    it("should return 404 for a deck that doesn't exist", async () => {
+      await request(app).get(`/decks/000000000001`).expect(404);
     });
   });
 });

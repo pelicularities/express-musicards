@@ -9,6 +9,11 @@ router.get("/", async (req, res, next) => {
   res.status(200).send(decks);
 });
 
+router.get("/:deckId", async (req, res, next) => {
+  const deck = await decksController.findById(req.params.deckId, next);
+  res.status(200).send(deck);
+});
+
 router.post("/", async (req, res, next) => {
   const newDeck = await decksController.createOne(req.body, next);
   if (newDeck) {
