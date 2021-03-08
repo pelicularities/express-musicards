@@ -93,7 +93,7 @@ describe("/decks", () => {
       await request(app).get(`/decks/000000000001`).expect(404);
     });
   });
-  describe("PUT /decks", () => {
+  describe("PUT /decks/:deckId", () => {
     it("should successfully edit a deck when given a title only", async () => {
       const editDeck = {
         title: "Edited Deck 1",
@@ -164,6 +164,25 @@ describe("/decks", () => {
         .send(editDeck)
         .set("Cookie", `token=${token}`)
         .expect(404);
+    });
+  });
+  describe("DELETE /decks/:deckId", () => {
+    it("should return 401 if user is unauthorized", async () => {
+      await request(app).delete(`/decks/${deckId}`).expect(401);
+    });
+    it("should successfully delete a deck when given a valid deck ID", async () => {
+      const { body: allDecksBefore } = await request(app).get("/decks");
+      const deckToDelete = {
+        title: "Modified Deck 1",
+        description: "Modified Deck Description 1",
+      };
+      const { body: deletedDeck } = await request(app)
+        .delete(`/decks/${deckId}`)
+        .set("Cookie", `token=${token}`)
+        .expect(200);
+      expect(deletedDeck).toMatchObject(deckToDelete);
+      const { body: allDecksAfter } = await request(app).get("/decks");
+      expect(allDecksBefore.length - 1).toEqual(allDecksAfter.length);
     });
   });
 });

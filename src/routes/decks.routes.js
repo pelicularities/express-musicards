@@ -39,4 +39,12 @@ router.put("/:deckId", async (req, res, next) => {
   if (updatedDeck) res.status(200).send(updatedDeck);
 });
 
+router.delete("/:deckId", async (req, res, next) => {
+  const deletedDeck = await decksController.findByIdAndDelete(
+    req.params.deckId,
+    next
+  );
+  res.status(200).send(deletedDeck);
+});
+
 module.exports = router;

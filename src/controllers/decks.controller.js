@@ -35,7 +35,6 @@ const findByIdAndUpdate = async (id, body, next) => {
       new: true,
       runValidators: true,
     });
-    console.log(updatedDeck);
     if (updatedDeck) return updatedDeck;
     const error = new Error("Deck not found");
     error.statusCode = 404;
@@ -46,4 +45,19 @@ const findByIdAndUpdate = async (id, body, next) => {
   }
 };
 
-module.exports = { findAll, createOne, findById, findByIdAndUpdate };
+const findByIdAndDelete = async (id, next) => {
+  try {
+    const deletedDeck = await Deck.findByIdAndDelete(id);
+    if (deletedDeck) return deletedDeck;
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = {
+  findAll,
+  createOne,
+  findById,
+  findByIdAndUpdate,
+  findByIdAndDelete,
+};
