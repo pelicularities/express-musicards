@@ -24,7 +24,7 @@ describe("/decks/:deckId/cards", () => {
     await dbHandlers.clearDatabase();
     await dbHandlers.closeDatabase();
   });
-  describe("POST /decks", () => {
+  describe("POST /decks/:deckId", () => {
     it("should successfully create a card when given a front and back", async () => {
       const newCard = {
         front: [{ type: "text", content: "Front of card" }],
@@ -108,8 +108,8 @@ describe("/decks/:deckId/cards", () => {
     });
     it("should successfully edit a card when given both a front and a back", async () => {
       const editCard = {
-        front: [{ type: "text", content: "Front of card (edited)" }],
-        back: [{ type: "text", content: "Back of card (edited)" }],
+        front: [{ type: "text", content: "Front of card (updated)" }],
+        back: [{ type: "text", content: "Back of card (updated)" }],
       };
       const { body: updatedCard } = await request(app)
         .put(`/decks/${deckId}/cards/${cardId}`)
@@ -156,6 +156,29 @@ describe("/decks/:deckId/cards", () => {
         .send(editCard)
         .set("Cookie", `token=${token}`)
         .expect(404);
+    });
+  });
+  describe("DELETE /decks/:deckId/cards/:cardId", () => {
+    it("should return 401 if user is unauthorized", async () => {
+      await request(app).delete(`/decks/${deckId}/cards/${cardId}`).expect(401);
+    });
+    it("should successfully delete a card when given a valid card ID", async () => {
+      const {
+        body: { cards: allCardsBefore },
+      } = await request(app).get(`/decks/${deckId}`);
+      const cardToDelete = {
+        front: [{ type: "text", content: "Front of card (updated)" }],
+        back: [{ type: "text", content: "Back of card (updated)" }],
+      };
+      const { body: deletedCard } = await request(app)
+        .delete(`/decks/${deckId}/cards/${cardId}`)
+        .set("Cookie", `token=${token}`)
+        .expect(200);
+      expect(deletedCard).toMatchObject(cardToDelete);
+      const {
+        body: { cards: allCardsAfter },
+      } = await request(app).get(`/decks/${deckId}`);
+      expect(allCardsBefore.length - 1).toEqual(allCardsAfter.length);
     });
   });
 });

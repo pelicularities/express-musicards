@@ -17,6 +17,20 @@ const findByIdAndUpdate = async (id, body, next) => {
   }
 };
 
+const findByIdAndDelete = async (cardId, deckId, next) => {
+  try {
+    const deckToUpdate = await Deck.findById(deckId);
+    const cardToRemove = deckToUpdate.cards.indexOf(cardId);
+    deckToUpdate.cards.splice(cardToRemove, 1);
+    deckToUpdate.save();
+    const deletedCard = await Card.findByIdAndDelete(cardId);
+    if (deletedCard) return deletedCard;
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   findByIdAndUpdate,
+  findByIdAndDelete,
 };

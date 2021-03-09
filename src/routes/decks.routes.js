@@ -67,4 +67,14 @@ router.delete("/:deckId", async (req, res, next) => {
   res.status(200).send(deletedDeck);
 });
 
+// will refactor into separate cards.routes later
+router.delete("/:deckId/cards/:cardId", async (req, res, next) => {
+  const deletedCard = await cardsController.findByIdAndDelete(
+    req.params.cardId,
+    req.params.deckId,
+    next
+  );
+  res.status(200).send(deletedCard);
+});
+
 module.exports = router;
