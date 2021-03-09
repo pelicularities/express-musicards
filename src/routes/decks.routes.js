@@ -49,6 +49,16 @@ router.put("/:deckId", async (req, res, next) => {
   if (updatedDeck) res.status(200).send(updatedDeck);
 });
 
+// will refactor into separate cards.routes later
+router.put("/:deckId/cards/:cardId", async (req, res, next) => {
+  const updatedCard = await cardsController.findByIdAndUpdate(
+    req.params.cardId,
+    req.body,
+    next
+  );
+  if (updatedCard) res.status(200).send(updatedCard);
+});
+
 router.delete("/:deckId", async (req, res, next) => {
   const deletedDeck = await decksController.findByIdAndDelete(
     req.params.deckId,

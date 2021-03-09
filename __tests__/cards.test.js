@@ -7,6 +7,7 @@ const createJWTToken = require("../src/utils/jwt");
 describe("/decks/:deckId/cards", () => {
   let token;
   let deckId;
+  let cardId;
   const testDeck = {
     title: "Test Deck 1",
     description: "Description 1",
@@ -76,6 +77,85 @@ describe("/decks/:deckId/cards", () => {
       const { body } = await request(app).get(`/decks/${deckId}`).expect(200);
       console.log(body.cards);
       expect(body.cards.length).toEqual(1);
+      cardId = body.cards[0];
+    });
+  });
+
+  describe("PUT /decks/:deckId/cards/:cardId", () => {
+    it("should successfully edit a card when given a front only", async () => {
+      const editCard = {
+        front: [{ type: "text", content: "Front of card (edited)" }],
+      };
+      const { body: updatedCard } = await request(app)
+        .put(`/decks/${deckId}/cards/${cardId}`)
+        .send(editCard)
+        .set("Cookie", `token=${token}`)
+        .expect(200);
+      expect(updatedCard.front).toEqual(editCard.front);
+      expect(updatedCard).toHaveProperty("back");
+    });
+    it("should successfully edit a card when given a back only", async () => {
+      const editCard = {
+        back: [{ type: "text", content: "Back of card (edited)" }],
+      };
+      const { body: updatedCard } = await request(app)
+        .put(`/decks/${deckId}/cards/${cardId}`)
+        .send(editCard)
+        .set("Cookie", `token=${token}`)
+        .expect(200);
+      expect(updatedCard.back).toEqual(editCard.back);
+      expect(updatedCard).toHaveProperty("front");
+    });
+    it("should successfully edit a card when given both a front and a back", async () => {
+      const editCard = {
+        front: [{ type: "text", content: "Front of card (edited)" }],
+        back: [{ type: "text", content: "Back of card (edited)" }],
+      };
+      const { body: updatedCard } = await request(app)
+        .put(`/decks/${deckId}/cards/${cardId}`)
+        .send(editCard)
+        .set("Cookie", `token=${token}`)
+        .expect(200);
+      expect(updatedCard).toMatchObject(editCard);
+    });
+    it("should return 422 if data is invalid", async () => {
+      const editCard = {
+        front: "",
+        back: "",
+      };
+      await request(app)
+        .put(`/decks/${deckId}/cards/${cardId}`)
+        .set("Cookie", `token=${token}`)
+        .send(editCard)
+        .expect(422);
+    });
+    it("should return 400 if no JSON is given", async () => {
+      await request(app)
+        .put(`/decks/${deckId}/cards/${cardId}`)
+        .send("")
+        .set("Cookie", `token=${token}`)
+        .expect(400);
+    });
+    it("should return 401 if user is unauthorized", async () => {
+      const editCard = {
+        front: [{ type: "text", content: "This user" }],
+        back: [{ type: "text", content: "is unauthorized!" }],
+      };
+      await request(app)
+        .put(`/decks/${deckId}/cards/${cardId}`)
+        .send(editCard)
+        .expect(401);
+    });
+    it("should return 404 for a card that doesn't exist", async () => {
+      const editCard = {
+        front: [{ type: "text", content: "This card" }],
+        back: [{ type: "text", content: "doesn't exist!" }],
+      };
+      await request(app)
+        .put(`/decks/${deckId}/cards/000000000001`)
+        .send(editCard)
+        .set("Cookie", `token=${token}`)
+        .expect(404);
     });
   });
 });
