@@ -1,10 +1,10 @@
 const Deck = require("../models/deck.model");
 const Card = require("../models/card.model");
 
-// given a deckId, find all cards belonging to that deck
-const findAll = async (deckId, next) => {
+// given a deck document, find all cards belonging to that deck
+const findAll = async (deck, next) => {
   try {
-    return await Deck.find({});
+    return await Card.find({ _id: { $in: deck.cards } });
   } catch (error) {
     next(error);
   }

@@ -52,8 +52,9 @@ router.delete("/:deckId", async (req, res, next) => {
 // NESTED CARDS ROUTER
 router.use(
   "/:deckId/cards",
-  (req, res, next) => {
+  async (req, res, next) => {
     req.deckId = req.params.deckId;
+    req.deck = await decksController.findById(req.params.deckId, next);
     next();
   },
   cardsRouter

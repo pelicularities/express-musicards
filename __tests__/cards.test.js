@@ -78,9 +78,17 @@ describe("/decks/:deckId/cards", () => {
   describe("GET /decks/:deckId, after cards are created", () => {
     it("should respond to GET with the new cards included in the deck", async () => {
       const { body } = await request(app).get(`/decks/${deckId}`).expect(200);
-      console.log(body.cards);
       expect(body.cards.length).toEqual(1);
       cardId = body.cards[0];
+    });
+  });
+
+  describe("GET /decks/:deckId/cards, after cards are created", () => {
+    it("should respond to GET with all the new cards from the deck", async () => {
+      const { body } = await request(app)
+        .get(`/decks/${deckId}/cards`)
+        .expect(200);
+      expect(body.length).toEqual(1);
     });
   });
 
