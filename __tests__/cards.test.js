@@ -31,7 +31,7 @@ describe("/decks/:deckId/cards", () => {
         back: [{ type: "text", content: "Back of card" }],
       };
       const response = await request(app)
-        .post(`/decks/${deckId}`)
+        .post(`/decks/${deckId}/cards`)
         .send(newCard)
         .set("Cookie", `token=${token}`)
         .expect(201);
@@ -42,7 +42,7 @@ describe("/decks/:deckId/cards", () => {
         back: [{ type: "text", content: "Back of card" }],
       };
       const response = await request(app)
-        .post(`/decks/${deckId}`)
+        .post(`/decks/${deckId}/cards`)
         .set("Cookie", `token=${token}`)
         .send(newCard)
         .expect(422);
@@ -52,14 +52,14 @@ describe("/decks/:deckId/cards", () => {
         front: [{ type: "text", content: "Front of card" }],
       };
       const response = await request(app)
-        .post(`/decks/${deckId}`)
+        .post(`/decks/${deckId}/cards`)
         .set("Cookie", `token=${token}`)
         .send(newCard)
         .expect(422);
     });
     it("should return 400 if no JSON is given", async () => {
       await request(app)
-        .post(`/decks/${deckId}`)
+        .post(`/decks/${deckId}/cards`)
         .send("")
         .set("Cookie", `token=${token}`)
         .expect(400);
@@ -69,7 +69,10 @@ describe("/decks/:deckId/cards", () => {
         front: [{ type: "text", content: "Front of card" }],
         back: [{ type: "text", content: "Back of card" }],
       };
-      await request(app).post(`/decks/${deckId}`).send(newCard).expect(401);
+      await request(app)
+        .post(`/decks/${deckId}/cards`)
+        .send(newCard)
+        .expect(401);
     });
   });
   describe("GET /decks/:deckId, after cards are created", () => {

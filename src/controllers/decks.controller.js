@@ -30,21 +30,6 @@ const createOne = async (body, next) => {
   }
 };
 
-const createOneCard = async (id, body, next) => {
-  try {
-    const deck = await Deck.findById(id);
-    const newCard = await Card.create(body);
-    if (newCard) {
-      deck.cards.push(newCard._id);
-      deck.save();
-      return newCard;
-    }
-  } catch (error) {
-    error.statusCode = 422;
-    next(error);
-  }
-};
-
 const findByIdAndUpdate = async (id, body, next) => {
   try {
     const updatedDeck = await Deck.findByIdAndUpdate(id, body, {
@@ -73,7 +58,6 @@ const findByIdAndDelete = async (id, next) => {
 module.exports = {
   findAll,
   createOne,
-  createOneCard,
   findById,
   findByIdAndUpdate,
   findByIdAndDelete,

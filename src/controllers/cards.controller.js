@@ -1,6 +1,30 @@
 const Deck = require("../models/deck.model");
 const Card = require("../models/card.model");
 
+// given a deckId, find all cards belonging to that deck
+const findAll = async (deckId, next) => {
+  try {
+    return await Deck.find({});
+  } catch (error) {
+    next(error);
+  }
+};
+
+const createOne = async (deckId, body, next) => {
+  try {
+    const deck = await Deck.findById(deckId);
+    const newCard = await Card.create(body);
+    if (newCard) {
+      deck.cards.push(newCard._id);
+      deck.save();
+      return newCard;
+    }
+  } catch (error) {
+    error.statusCode = 422;
+    next(error);
+  }
+};
+
 const findByIdAndUpdate = async (id, body, next) => {
   try {
     const updatedCard = await Card.findByIdAndUpdate(id, body, {
@@ -31,6 +55,8 @@ const findByIdAndDelete = async (cardId, deckId, next) => {
 };
 
 module.exports = {
+  findAll,
+  createOne,
   findByIdAndUpdate,
   findByIdAndDelete,
 };

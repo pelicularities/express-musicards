@@ -31,8 +31,8 @@ router.post("/", async (req, res, next) => {
   if (newDeck) res.status(201).send(newDeck);
 });
 
-router.post("/:deckId", async (req, res, next) => {
-  const newCard = await decksController.createOneCard(
+router.post("/:deckId/cards", async (req, res, next) => {
+  const newCard = await cardsController.createOne(
     req.params.deckId,
     req.body,
     next
