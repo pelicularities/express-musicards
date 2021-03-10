@@ -1,13 +1,29 @@
 require("dotenv").config();
 const express = require("express");
 const cookieParser = require("cookie-parser");
-const protectRoute = require("./middleware/protectRoute");
+const cors = require("cors");
 const requireJsonContent = require("./middleware/requireJsonContent");
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
 // MIDDLEWARE
+const whitelist = ["http://localhost:3000"];
+const validCorsOrigin = (origin, callback) => {
+  if (whitelist.indexOf(origin) !== -1 || !origin) {
+    callback(null, true);
+  } else {
+    const error = new Error("Not allowed by CORS");
+    error.statusCode = 401;
+    callback(error);
+  }
+};
+const corsOptions = {
+  origin: validCorsOrigin,
+};
+
+app.use(cors(corsOptions));
+
 app.post("/*", requireJsonContent, (req, res, next) => {
   next();
 });
