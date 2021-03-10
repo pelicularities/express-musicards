@@ -5,7 +5,7 @@ const validateCardSides = (sections) => {
   if (!sections) return false;
   if (!sections.length) return false;
   // each side is an array of sections
-  const isValid = true;
+  let isValid = true;
   const validTypes = ["text", "stave", "image", "midi"];
   sections.forEach((section) => {
     if (!validTypes.includes(section.type)) {
