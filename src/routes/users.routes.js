@@ -33,7 +33,7 @@ router.post("/login", async (req, res, next) => {
 
       res.cookie("token", token, {
         expires: expiryDate,
-        httpOnly: false,
+        httpOnly: true,
         secure: true,
       });
 
