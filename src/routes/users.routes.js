@@ -34,7 +34,7 @@ router.post("/login", async (req, res, next) => {
       res.cookie("token", token, {
         expires: expiryDate,
         httpOnly: true,
-        secure: true,
+        secure: false,
       });
 
       res.status(200).send("You are now logged in!");
