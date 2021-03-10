@@ -35,6 +35,7 @@ router.post("/login", async (req, res, next) => {
         expires: expiryDate,
         httpOnly: true,
         secure: true,
+        sameSite: "None",
       });
 
       res.status(200).send("You are now logged in!");
