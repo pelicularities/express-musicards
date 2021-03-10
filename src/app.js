@@ -20,6 +20,7 @@ const validCorsOrigin = (origin, callback) => {
 };
 const corsOptions = {
   origin: validCorsOrigin,
+  credentials: true,
 };
 
 app.use(cors(corsOptions));
