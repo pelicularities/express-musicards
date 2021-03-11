@@ -5,11 +5,27 @@ const bcrypt = require("bcryptjs");
 const createJWTToken = require("../utils/jwt");
 const User = require("../models/user.model");
 
-// ROUTES
+// HELPER FUNCTIONS
+const setCookie = (userId, username, res) => {
+  const token = createJWTToken(userId, username);
 
+  const oneDay = 24 * 60 * 60 * 1000;
+  const oneWeek = oneDay * 7;
+  const expiryDate = new Date(Date.now() + oneWeek);
+
+  res.cookie("token", token, {
+    expires: expiryDate,
+    httpOnly: true,
+    secure: true,
+    sameSite: "None",
+  });
+};
+
+// ROUTES
 router.post("/", async (req, res, next) => {
   const newUser = await usersController.createOne(req.body, next);
   if (newUser) {
+    setCookie(newUser._id, newUser.username, res);
     res.status(201).send(newUser);
   }
 });
@@ -25,19 +41,7 @@ router.post("/login", async (req, res, next) => {
       err.statusCode = 401;
       next(err);
     } else {
-      const token = createJWTToken(user._id, user.username);
-
-      const oneDay = 24 * 60 * 60 * 1000;
-      const oneWeek = oneDay * 7;
-      const expiryDate = new Date(Date.now() + oneWeek);
-
-      res.cookie("token", token, {
-        expires: expiryDate,
-        httpOnly: true,
-        secure: true,
-        sameSite: "None",
-      });
-
+      setCookie(user._id, user.username, res);
       res.status(200).send("You are now logged in!");
     }
   } catch (err) {
