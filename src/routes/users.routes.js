@@ -54,7 +54,9 @@ router.post("/login", async (req, res, next) => {
 });
 
 router.post("/logout", async (req, res, next) => {
-  res.clearCookie("token").send("You are now logged out!");
+  res
+    .clearCookie("token", { path: "/", domain: "localhost:3000" })
+    .send("You are now logged out!");
 });
 
 module.exports = router;
