@@ -55,7 +55,10 @@ router.post("/login", async (req, res, next) => {
 
 router.post("/logout", async (req, res, next) => {
   res
-    .clearCookie("token", { path: "/", domain: "localhost:3000" })
+    .clearCookie("token", {
+      path: "/",
+      domain: "express-musicards-test.herokuapp.com",
+    })
     .send("You are now logged out!");
 });
 
