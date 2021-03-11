@@ -25,6 +25,7 @@ const setCookie = (userId, username, res) => {
 router.post("/", async (req, res, next) => {
   const newUser = await usersController.createOne(req.body, next);
   if (newUser) {
+    console.log(newUser);
     setCookie(newUser._id, newUser.username, res);
     res.status(201).send(newUser);
   }
