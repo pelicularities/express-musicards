@@ -1,5 +1,5 @@
 const Deck = require("../models/deck.model");
-const Card = require("../models/card.model");
+const User = require("../models/user.model");
 
 const findAll = async (next) => {
   try {
@@ -20,9 +20,13 @@ const findById = async (id, next) => {
   }
 };
 
-const createOne = async (body, next) => {
+const createOne = async (user, body, next) => {
   try {
+    console.log(user);
+    body.userId = user.id;
+    body.username = user.name;
     const newDeck = await Deck.create(body);
+    console.log(newDeck);
     if (newDeck) return newDeck;
   } catch (error) {
     error.statusCode = 422;

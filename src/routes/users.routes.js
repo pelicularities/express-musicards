@@ -25,7 +25,7 @@ router.post("/login", async (req, res, next) => {
       err.statusCode = 401;
       next(err);
     } else {
-      const token = createJWTToken(user.username);
+      const token = createJWTToken(user._id, user.username);
 
       const oneDay = 24 * 60 * 60 * 1000;
       const oneWeek = oneDay * 7;

@@ -28,7 +28,7 @@ router.get("/:deckId", async (req, res, next) => {
 });
 
 router.post("/", async (req, res, next) => {
-  const newDeck = await decksController.createOne(req.body, next);
+  const newDeck = await decksController.createOne(req.user, req.body, next);
   if (newDeck) res.status(201).send(newDeck);
 });
 

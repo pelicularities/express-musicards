@@ -15,7 +15,7 @@ describe("/decks/:deckId/cards", () => {
   };
   beforeAll(async () => {
     await dbHandlers.connect();
-    token = createJWTToken("yoloauth");
+    token = createJWTToken("60486c69e4ecd500156ae5e1", "testUser");
     Deck.create(testDeck);
     const { body } = await request(app).get("/decks");
     deckId = body[0]._id;

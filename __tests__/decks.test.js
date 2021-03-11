@@ -13,7 +13,7 @@ describe("/decks", () => {
   ];
   beforeAll(async () => {
     await dbHandlers.connect();
-    token = createJWTToken("yoloauth");
+    token = createJWTToken("60486c69e4ecd500156ae5e1", "testUser");
   });
   afterAll(async () => {
     await dbHandlers.clearDatabase();

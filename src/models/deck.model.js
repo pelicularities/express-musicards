@@ -6,6 +6,12 @@ const deckSchema = new Schema({
     type: String,
     required: true,
   },
+  userId: {
+    type: mongoose.ObjectId,
+  },
+  username: {
+    type: String,
+  },
   description: {
     type: String,
   },

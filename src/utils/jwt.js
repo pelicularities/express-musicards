@@ -8,14 +8,18 @@ const getJWTSecret = () => {
   return secret;
 };
 
-const createJWTToken = (username) => {
+const createJWTToken = (userId, username) => {
   const today = new Date();
   const exp = new Date(today);
 
   const secret = getJWTSecret();
   exp.setDate(today.getDate() + 60); // adding days
 
-  const payload = { name: username, exp: parseInt(exp.getTime() / 1000) };
+  const payload = {
+    id: userId,
+    name: username,
+    exp: parseInt(exp.getTime() / 1000),
+  };
   const token = jwt.sign(payload, secret);
   return token;
 };
