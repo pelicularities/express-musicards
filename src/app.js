@@ -9,7 +9,12 @@ app.use(express.json());
 app.use(cookieParser());
 
 // MIDDLEWARE
-const whitelist = ["http://localhost:3000", "http://localhost:3001"];
+const whitelist = [
+  "http://localhost:3000",
+  "http://localhost:3001",
+  "https://604b239e45c7c475e7c68f27--musicards-v2.netlify.app",
+  "https://musicards-v2.netlify.app",
+];
 const validCorsOrigin = (origin, callback) => {
   if (whitelist.indexOf(origin) !== -1 || !origin) {
     callback(null, true);
