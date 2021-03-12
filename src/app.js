@@ -15,6 +15,7 @@ const whitelist = [
   "https://604b239e45c7c475e7c68f27--musicards-v2.netlify.app",
   "https://604b249fbed03776903944ab--musicards-v2.netlify.app",
   "https://604b25e20745f482061b6b79--musicards-v2.netlify.app",
+  "https://604b28b29b8bdd75ec1bda68--musicards-v2.netlify.app",
   "https://musicards-v2.netlify.app",
 ];
 const validCorsOrigin = (origin, callback) => {
