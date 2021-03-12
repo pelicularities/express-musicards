@@ -13,6 +13,7 @@ const whitelist = [
   "http://localhost:3000",
   "http://localhost:3001",
   "https://604b239e45c7c475e7c68f27--musicards-v2.netlify.app",
+  "https://604b249fbed03776903944ab--musicards-v2.netlify.app",
   "https://musicards-v2.netlify.app",
 ];
 const validCorsOrigin = (origin, callback) => {
