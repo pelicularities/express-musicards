@@ -9,7 +9,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 // MIDDLEWARE
-const whitelist = ["http://localhost:3000"];
+const whitelist = ["http://localhost:3000", "http://localhost:3001"];
 const validCorsOrigin = (origin, callback) => {
   if (whitelist.indexOf(origin) !== -1 || !origin) {
     callback(null, true);
