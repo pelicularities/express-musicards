@@ -34,7 +34,7 @@ router.post("/", async (req, res, next) => {
 router.post("/login", async (req, res, next) => {
   try {
     const { username, password } = req.body;
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ username: username });
     const result = await bcrypt.compare(password, user.password);
 
     if (!result) {
