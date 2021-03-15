@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const protectRoute = require("../middleware/protectRoute");
 const usersController = require("../controllers/users.controller");
 const bcrypt = require("bcryptjs");
 const createJWTToken = require("../utils/jwt");
@@ -60,6 +61,10 @@ router.post("/logout", async (req, res, next) => {
       domain: "express-musicards-test.herokuapp.com",
     })
     .send("You are now logged out!");
+});
+
+router.get("/me", protectRoute, async (req, res, next) => {
+  res.status(200).send(req.user);
 });
 
 module.exports = router;
