@@ -4,6 +4,7 @@ const protectRoute = require("../middleware/protectRoute");
 const usersController = require("../controllers/users.controller");
 const bcrypt = require("bcryptjs");
 const createJWTToken = require("../utils/jwt");
+const jwt = require("jsonwebtoken");
 const User = require("../models/user.model");
 
 // HELPER FUNCTIONS
@@ -20,6 +21,8 @@ const setCookie = (userId, username, res) => {
     secure: true,
     sameSite: "None",
   });
+
+  return token;
 };
 
 // ROUTES
@@ -43,8 +46,9 @@ router.post("/login", async (req, res, next) => {
       err.statusCode = 401;
       next(err);
     } else {
-      setCookie(user._id, user.username, res);
-      res.status(200).send("You are now logged in!");
+      const token = setCookie(user._id, user.username, res);
+      req.user = jwt.verify(token, process.env.JWT_SECRET_KEY);
+      res.status(200).send(req.user);
     }
   } catch (err) {
     if (err.message === "Login failed") {
