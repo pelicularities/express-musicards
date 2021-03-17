@@ -2,8 +2,9 @@ const request = require("supertest");
 const app = require("../src/app");
 const dbHandlers = require("../test/dbHandler");
 const bcrypt = require("bcryptjs");
+const User = require("../src/models/user.model");
 
-describe("/decks", () => {
+describe("/users", () => {
   beforeAll(async () => {
     await dbHandlers.connect();
   });
@@ -19,9 +20,10 @@ describe("/decks", () => {
         .post("/users")
         .send(newUser)
         .expect(201);
-      expect(createdUser.username).toEqual(newUser.username);
+      expect(createdUser.name).toEqual(newUser.username);
+      const readCreatedUserFromDB = await User.findById(createdUser.id);
       expect(
-        await bcrypt.compare(newUser.password, createdUser.password)
+        await bcrypt.compare(newUser.password, readCreatedUserFromDB.password)
       ).toEqual(true);
     });
     it("should return 422 if no username is given", async () => {

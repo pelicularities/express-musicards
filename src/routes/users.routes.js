@@ -29,9 +29,9 @@ const setCookie = (userId, username, res) => {
 router.post("/", async (req, res, next) => {
   const newUser = await usersController.createOne(req.body, next);
   if (newUser) {
-    console.log(newUser);
-    setCookie(newUser._id, newUser.username, res);
-    res.status(201).send(newUser);
+    const token = setCookie(newUser._id, newUser.username, res);
+    req.user = jwt.verify(token, process.env.JWT_SECRET_KEY);
+    res.status(201).send(req.user);
   }
 });
 
