@@ -1,6 +1,7 @@
 const request = require("supertest");
 const app = require("../src/app");
 const Deck = require("../src/models/deck.model");
+const User = require("../src/models/user.model");
 const dbHandlers = require("../test/dbHandler");
 const createJWTToken = require("../src/utils/jwt");
 
@@ -8,14 +9,22 @@ describe("/decks/:deckId/cards", () => {
   let token;
   let deckId;
   let cardId;
-  const testDeck = {
-    title: "Test Deck 1",
-    description: "Description 1",
-    cards: [],
-  };
   beforeAll(async () => {
     await dbHandlers.connect();
-    token = createJWTToken("60486c69e4ecd500156ae5e1", "testUser");
+    const testUser = await User.create({
+      username: "testUser",
+      password: "testPassword",
+    });
+    console.log(testUser);
+    const testDeck = {
+      title: "Test Deck 1",
+      description: "Description 1",
+      userId: testUser._id,
+      username: testUser.username,
+      cards: [],
+    };
+    token = createJWTToken(testUser._id, testUser.username);
+    console.log("token", token);
     Deck.create(testDeck);
     const { body } = await request(app).get("/decks");
     deckId = body[0]._id;
