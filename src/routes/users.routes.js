@@ -60,12 +60,7 @@ router.post("/login", async (req, res, next) => {
 
 router.get("/logout", async (req, res, next) => {
   const domain = process.env.DOMAIN_URI || "localhost";
-  res
-    .clearCookie("token", {
-      path: "/",
-      domain: domain,
-    })
-    .send("You are now logged out!");
+  res.clearCookie("token").send("You are now logged out!");
 });
 
 router.get("/me", protectRoute, async (req, res, next) => {
