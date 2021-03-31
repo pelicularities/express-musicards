@@ -58,14 +58,14 @@ router.post("/login", async (req, res, next) => {
   }
 });
 
-router.get("/logout", async (req, res, next) => {
+router.get("/logout", async (req, res) => {
   // const domain = process.env.DOMAIN_URI || "localhost";
   res
     .clearCookie("token", { secure: true, sameSite: "None" })
     .send("You are now logged out!");
 });
 
-router.get("/me", protectRoute, async (req, res, next) => {
+router.get("/me", protectRoute, async (req, res) => {
   res.status(200).send(req.user);
 });
 

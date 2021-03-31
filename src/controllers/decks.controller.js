@@ -1,5 +1,4 @@
 const Deck = require("../models/deck.model");
-const User = require("../models/user.model");
 
 const findAll = async (next) => {
   try {

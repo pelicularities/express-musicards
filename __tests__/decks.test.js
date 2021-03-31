@@ -90,7 +90,7 @@ describe("/decks", () => {
       expect(body).toMatchObject(testDecks[0]);
     });
     it("should return 404 for a deck that doesn't exist", async () => {
-      await request(app).get(`/decks/000000000001`).expect(404);
+      await request(app).get(`/decks/ffffffffffff`).expect(404);
     });
   });
   describe("PUT /decks/:deckId", () => {

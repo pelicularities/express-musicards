@@ -3,7 +3,6 @@ const router = express.Router();
 const protectRoute = require("../middleware/protectRoute");
 const cardsRouter = require("../routes/cards.routes");
 const decksController = require("../controllers/decks.controller");
-const cardsController = require("../controllers/cards.controller");
 
 // MIDDLEWARE
 router.post("/*", protectRoute, (req, res, next) => {

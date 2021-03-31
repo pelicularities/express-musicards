@@ -12,7 +12,7 @@ const protectRoute = (req, res, next) => {
     }
   } catch (error) {
     error.statusCode = 401;
-    next(err);
+    next(error);
   }
 };
 
