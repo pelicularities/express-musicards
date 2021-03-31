@@ -58,7 +58,7 @@ describe("/decks", () => {
       const newDeck = {
         description: "Description",
       };
-      const response = await request(app)
+      await request(app)
         .post("/decks")
         .set("Cookie", `token=${token}`)
         .send(newDeck)
@@ -90,7 +90,7 @@ describe("/decks", () => {
       expect(body).toMatchObject(testDecks[0]);
     });
     it("should return 404 for a deck that doesn't exist", async () => {
-      await request(app).get(`/decks/ffffffffffff`).expect(404);
+      await request(app).get("/decks/000000000001").expect(404);
     });
   });
   describe("PUT /decks/:deckId", () => {
@@ -134,7 +134,7 @@ describe("/decks", () => {
       const editDeck = {
         title: "",
       };
-      const response = await request(app)
+      await request(app)
         .put(`/decks/${deckId}`)
         .set("Cookie", `token=${token}`)
         .send(editDeck)
@@ -160,7 +160,7 @@ describe("/decks", () => {
         description: "This deck doesn't exist!",
       };
       await request(app)
-        .put(`/decks/000000000001`)
+        .put("/decks/000000000001")
         .send(editDeck)
         .set("Cookie", `token=${token}`)
         .expect(404);
