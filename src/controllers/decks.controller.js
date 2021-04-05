@@ -1,4 +1,5 @@
 const Deck = require("../models/deck.model");
+const Card = require("../models/card.model");
 
 const findAll = async (next) => {
   try {
@@ -52,7 +53,12 @@ const findByIdAndUpdate = async (id, body, next) => {
 const findByIdAndDelete = async (id, next) => {
   try {
     const deletedDeck = await Deck.findByIdAndDelete(id);
-    if (deletedDeck) return deletedDeck;
+    if (deletedDeck) {
+      deletedDeck.cards.forEach(async (cardId) => {
+        await Card.findByIdAndDelete(cardId);
+      });
+      return deletedDeck;
+    }
   } catch (error) {
     next(error);
   }
