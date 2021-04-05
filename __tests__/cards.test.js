@@ -15,7 +15,6 @@ describe("/decks/:deckId/cards", () => {
       username: "testUser",
       password: "testPassword",
     });
-    console.log(testUser);
     const testDeck = {
       title: "Test Deck 1",
       description: "Description 1",
@@ -24,7 +23,6 @@ describe("/decks/:deckId/cards", () => {
       cards: [],
     };
     token = createJWTToken(testUser._id, testUser.username);
-    console.log("token", token);
     Deck.create(testDeck);
     const { body } = await request(app).get("/decks");
     deckId = body[0]._id;
@@ -50,7 +48,7 @@ describe("/decks/:deckId/cards", () => {
       const newCard = {
         back: [{ type: "text", content: "Back of card" }],
       };
-      const response = await request(app)
+      await request(app)
         .post(`/decks/${deckId}/cards`)
         .set("Cookie", `token=${token}`)
         .send(newCard)
@@ -60,7 +58,7 @@ describe("/decks/:deckId/cards", () => {
       const newCard = {
         front: [{ type: "text", content: "Front of card" }],
       };
-      const response = await request(app)
+      await request(app)
         .post(`/decks/${deckId}/cards`)
         .set("Cookie", `token=${token}`)
         .send(newCard)

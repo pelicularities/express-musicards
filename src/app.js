@@ -1,5 +1,4 @@
 require("dotenv").config();
-const jwt = require("jsonwebtoken");
 const express = require("express");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
@@ -43,9 +42,7 @@ app.put("/*", requireJsonContent, (req, res, next) => {
 
 // ROUTES
 app.get("/", (req, res) => {
-  const user = jwt.verify(req.cookies.token, process.env.JWT_SECRET_KEY);
-  console.log(user);
-  res.status(200).send("Hello");
+  res.status(200).send("Server is running");
 });
 
 // ROUTERS

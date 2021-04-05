@@ -22,11 +22,9 @@ const findById = async (id, next) => {
 
 const createOne = async (user, body, next) => {
   try {
-    console.log(user);
     body.userId = user.id;
     body.username = user.name;
     const newDeck = await Deck.create(body);
-    console.log(newDeck);
     if (newDeck) return newDeck;
   } catch (error) {
     error.statusCode = 422;

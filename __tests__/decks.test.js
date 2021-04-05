@@ -83,7 +83,14 @@ describe("/decks", () => {
     it("should respond to GET with an array of decks from the DB, including newly added decks", async () => {
       const { body } = await request(app).get("/decks").expect(200);
       expect(body.length).toEqual(4);
-      deckId = body[0]._id;
+      // the following step is necessary because the initial deck creation
+      // with two decks creates a race condition, with Test Deck 2
+      // occasionally being created before Test Deck 1,
+      // resulting in a flaky test
+      const testDeckOne = body.find(
+        (deck) => deck.title === testDecks[0].title
+      );
+      deckId = testDeckOne._id;
     });
     it("should retrieve a single deck when given the deck ID", async () => {
       const { body } = await request(app).get(`/decks/${deckId}`).expect(200);
