@@ -56,7 +56,7 @@ app.use("/users", usersRouter);
 app.use((error, req, res, next) => {
   error.statusCode = error.statusCode || 500;
   console.log(error.message);
-  res.status(error.statusCode).send(error.message);
+  res.status(error.statusCode).send({ error: error.message });
 });
 
 module.exports = app;
